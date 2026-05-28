@@ -106,24 +106,41 @@
   nav.rubnav .wrap{display:flex;gap:0;flex-wrap:wrap;}
   nav.rubnav button{
     appearance:none;border:none;background:none;cursor:pointer;
-    font-family:var(--sans);font-weight:700;
-    font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
-    padding:14px 18px;color:var(--ink-soft);
+    font-family:var(--sans);font-weight:800;
+    font-size:13.5px;letter-spacing:.07em;text-transform:uppercase;
+    padding:13px 20px;color:var(--ink);
     border-bottom:3px solid transparent;
     transition:color .18s, border-color .18s, background .18s;
-    position:relative;
+    position:relative;display:flex;align-items:center;gap:9px;
   }
-  nav.rubnav button:hover{color:var(--ink);background:rgba(0,0,0,.03);}
+  /* pastille de couleur devant chaque rubrique */
+  nav.rubnav button[data-rub]:not([data-rub="une"])::before{
+    content:"";width:9px;height:9px;border-radius:50%;
+    background:var(--dot, var(--ink-faint));flex:none;
+    transition:transform .18s;
+  }
+  nav.rubnav button[data-rub="hard"]{--dot:var(--hard);}
+  nav.rubnav button[data-rub="soft"]{--dot:var(--soft);}
+  nav.rubnav button[data-rub="smart"]{--dot:var(--smart);}
+  nav.rubnav button[data-rub="sharp"]{--dot:var(--sharp);}
+  /* séparateur "La Une" / rubriques */
+  nav.rubnav button[data-rub="une"]{margin-right:6px;border-right:1px solid var(--rule);}
+
+  nav.rubnav button:hover{background:rgba(0,0,0,.04);}
+  nav.rubnav button:hover::before{transform:scale(1.35);}
   nav.rubnav button.active{color:var(--ink);}
   nav.rubnav button[data-rub="une"].active{border-color:var(--ink);}
-  nav.rubnav button[data-rub="hard"].active{border-color:var(--hard);color:var(--hard);}
-  nav.rubnav button[data-rub="soft"].active{border-color:var(--soft);color:var(--soft);}
-  nav.rubnav button[data-rub="smart"].active{border-color:var(--smart);color:var(--smart);}
-  nav.rubnav button[data-rub="sharp"].active{border-color:var(--sharp);color:var(--sharp);}
+  nav.rubnav button[data-rub="hard"].active{border-color:var(--hard);color:var(--hard);background:var(--hard-soft, rgba(157,28,28,.07));}
+  nav.rubnav button[data-rub="soft"].active{border-color:var(--soft);color:var(--soft);background:rgba(31,95,79,.08);}
+  nav.rubnav button[data-rub="smart"].active{border-color:var(--smart);color:var(--smart);background:rgba(138,106,20,.08);}
+  nav.rubnav button[data-rub="sharp"].active{border-color:var(--sharp);color:var(--sharp);background:rgba(42,47,107,.08);}
+  nav.rubnav button.active::before{transform:scale(1.35);}
   nav.rubnav button .tag{
-    font-size:8px;letter-spacing:.1em;display:block;color:var(--ink-faint);
-    font-weight:600;margin-top:2px;
+    font-size:8.5px;letter-spacing:.1em;display:block;color:var(--ink-faint);
+    font-weight:700;margin-top:2px;
   }
+  /* le label + son sous-titre forment une colonne, à droite de la pastille */
+  nav.rubnav button .lbl{display:flex;flex-direction:column;line-height:1.05;}
 
   /* ====== ZONES ====== */
   main{padding:34px 0 60px;min-height:60vh;}
@@ -356,6 +373,95 @@
   footer .f2{font-style:italic;}
 
   ::selection{background:var(--smart);color:#fff;}
+
+  /* ============================================================
+     OPTIMISATION MOBILE
+     ============================================================ */
+  @media(max-width:680px){
+    .wrap{padding:0 16px;}
+
+    /* Bandeau groupe : on allège (titres secondaires masqués) */
+    .groupbar{font-size:10px;padding:6px 0;}
+    .groupbar .wrap{justify-content:center;}
+    .groupbar .titles span:not(:first-child){display:none;}
+    .groupbar .titles span:first-child::after{content:" · Édition pédagogique";color:#8295b8;font-weight:400;}
+    .groupbar .lic{display:none;}
+
+    /* Masthead resserré */
+    .masthead{padding:14px 0 4px;}
+    .masthead .kicker{font-size:9px;letter-spacing:.22em;margin-bottom:5px;}
+    .masthead h1{font-size:clamp(38px,13vw,56px);}
+    .masthead .sub{font-size:8.5px;letter-spacing:.18em;}
+
+    /* Dateline empilée et centrée */
+    .dateline{flex-direction:column;gap:2px;text-align:center;padding:6px 0;font-size:10px;}
+    .dateline .l,.dateline .r,.dateline .c{text-align:center;flex:none;}
+    .dateline .r{color:var(--ink-faint);}
+
+    /* Navigation : ruban scrollable horizontal (plus d'empilement) */
+    nav.rubnav .wrap{
+      flex-wrap:nowrap;overflow-x:auto;padding:0 8px;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    }
+    nav.rubnav .wrap::-webkit-scrollbar{display:none;}
+    nav.rubnav button{
+      flex:0 0 auto;white-space:nowrap;padding:12px 14px;font-size:12px;letter-spacing:.05em;
+    }
+    nav.rubnav button .tag{display:none;}
+
+    main{padding:22px 0 44px;}
+
+    /* --- LA UNE --- */
+    .une-head{margin-bottom:18px;}
+    .une-head h2{font-size:clamp(24px,7vw,30px);}
+    .une-grid{gap:0;padding-top:18px;}
+    .lead-article .lead-title{font-size:clamp(28px,8.5vw,40px);}
+    .lead-article .lead-chapo{font-size:16px;line-height:1.5;}
+    .lead-article figure{margin:12px 0;}
+
+    /* Colonne latérale : séparée du lead par une vraie règle */
+    .une-side{margin-top:22px;border-top:2px solid var(--ink);padding-top:4px;}
+    .side-card{padding:16px 0;}
+    .side-card h3{font-size:20px;}
+
+    /* "Aussi dans ce numéro" : vignette plus petite, lisible */
+    .aussi{margin-top:26px;padding-top:16px;}
+    .aussi-grid{grid-template-columns:1fr;gap:0;}
+    .aussi-card{
+      padding:15px 0;border-bottom:1px solid var(--rule-soft);align-items:center;
+    }
+    .aussi-card img{width:84px;height:60px;}
+    .aussi-txt h4{font-size:16px;}
+
+    /* --- RUBRIQUE --- */
+    .rub-banner{padding:20px 18px;}
+    .rub-banner .wm{font-size:96px;bottom:-22px;right:-6px;}
+    .art-card{padding:18px 16px 20px;}
+    .art-card h3{font-size:21px;}
+    .art-card .c{font-size:14px;}
+
+    /* --- ARTICLE PLEINE PAGE --- */
+    .article-full h1{font-size:clamp(26px,7.5vw,34px);line-height:1.08;margin-bottom:14px;}
+    .af-chapo{font-size:17px;line-height:1.5;margin-bottom:18px;}
+    .af-banner{padding:10px 14px;gap:6px;}
+    .af-banner .name{font-size:13px;}
+    .af-banner .desc{font-size:11px;}
+    .af-body{font-size:16.5px;line-height:1.68;}
+    .af-body p:first-of-type::first-letter{font-size:52px;padding:5px 8px 0 0;}
+    .af-body .pull{font-size:20px;line-height:1.35;}
+    .article-full figure{margin:18px 0;}
+    .journo{padding:18px 16px;margin:26px 0 20px;}
+    .journo .jgrid{grid-template-columns:1fr 1fr;gap:12px;}
+    .journo .jname{font-size:23px;}
+    .back-btn{margin-bottom:16px;}
+  }
+
+  /* Très petits écrans (≤ 380px) */
+  @media(max-width:380px){
+    .journo .jgrid{grid-template-columns:1fr;}
+    .masthead h1{font-size:46px;}
+    .lead-article .lead-title{font-size:30px;}
+  }
 </style>
 </head>
 <body>
@@ -383,10 +489,10 @@
 <nav class="rubnav">
   <div class="wrap">
     <button data-rub="une" class="active">La Une</button>
-    <button data-rub="hard">Hard Power<span class="tag">Contrainte</span></button>
-    <button data-rub="soft">Soft Power<span class="tag">Attraction</span></button>
-    <button data-rub="smart">Smart Power<span class="tag">Combinaison</span></button>
-    <button data-rub="sharp">Sharp Power<span class="tag">Manipulation</span></button>
+    <button data-rub="hard"><span class="lbl">Hard Power<span class="tag">Contrainte</span></span></button>
+    <button data-rub="soft"><span class="lbl">Soft Power<span class="tag">Attraction</span></span></button>
+    <button data-rub="smart"><span class="lbl">Smart Power<span class="tag">Combinaison</span></span></button>
+    <button data-rub="sharp"><span class="lbl">Sharp Power<span class="tag">Manipulation</span></span></button>
   </div>
 </nav>
 
@@ -427,7 +533,7 @@ const ARTICLES = [
     legende:"Trump lors de son discours sur la guerre en Iran, 1er avril 2026.",
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`Les États-Unis sont la première puissance militaire mondiale, ce qui leur procure un hard power redoutable. En effet, sur le plan militaire terrestre ou maritime, les États-Unis se distinguent grandement des autres États du monde. Avec le premier budget militaire mondial (environ 770 millions de dollars annuels), les dépenses militaires américaines représentent plus de 40 % des dépenses militaires mondiales.`},
+      {t:"p", c:`Les États-Unis sont la première puissance militaire mondiale, ce qui leur procure un hard power redoutable. En effet, sur le plan militaire terrestre ou maritime, les États-Unis se distinguent grandement des autres États du monde. Avec le premier budget militaire mondial (environ 770 milliards de dollars annuels), les dépenses militaires américaines représentent plus de 40 % des dépenses militaires mondiales.`},
       {t:"p", c:`C'est dans ce contexte qu'a lieu l'enlèvement du président vénézuélien Nicolás Maduro, le 3 janvier 2026, par les États-Unis, ce qui démontre leur puissance. Ou encore le souhait du président Trump d'annexer le Groenland, zone clé dans les rivalités militaires et économiques. Un souhait irréaliste devenu probable suite à l'intervention militaire américaine au Venezuela. Donald Trump présente le Groenland comme une zone stratégique pour la sécurité américaine et même mondiale.`},
       {t:"p", c:`Ou encore avec l'offensive israélo-américaine contre l'Iran, qui a débuté le 28 février 2026 : les États-Unis et Israël lancent des frappes massives contre l'Iran, déclenchant une guerre régionale avec missiles et ripostes qui mènent à la fermeture du détroit d'Ormuz. Ce conflit leur permet d'affaiblir l'Iran tout en montrant leur domination militaire mondiale.`},
       {t:"p", c:`Aussi, les États-Unis ont décidé de réduire d'environ 5 000 le nombre de soldats stationnés en Allemagne, ce qui inquiète leurs alliés et fragilise l'équilibre de l'OTAN. Cette décision a été prise en réaction aux critiques allemandes sur la guerre en Iran. C'est un exemple de l'utilisation de l'armée américaine comme outil de pression diplomatique. Ainsi, leur dominance au sein de l'OTAN est mise en exergue, avec notamment leur capacité à sanctionner leurs alliés.`},
@@ -527,8 +633,8 @@ const ARTICLES = [
     id:"ferreira",
     rub:"hard",
     overline:"Reportage · Proche-Orient",
-    titre:`Guerre au Moyen-Orient: un cap a été franchi...`,
-    chapo:`Depuis le 28 février 2026, l'Iran est dans une situation critique. Les Etats-Unis et l'Israël ont bombardé dans plusieurs zone du pays, faisant plus de 1000 morts civils. Avec le blocage du détroit d'Ormuz, la hausse des prix du carburant a augmenté. D'un point de vue humain, le bilan est effroyable. Jusqu'où vont-ils aller?`,
+    titre:`Guerre au Moyen-Orient : un cap a été franchi…`,
+    chapo:`Depuis le 28 février 2026, l'Iran est dans une situation critique. Les États-Unis et Israël ont bombardé plusieurs zones du pays, faisant plus de 1 000 morts civils. Avec le blocage du détroit d'Ormuz, les prix du carburant ont augmenté. D'un point de vue humain, le bilan est effroyable. Jusqu'où vont-ils aller ?`,
     image:"moyenorient",
     legende:`Frappes au Moyen-Orient — situation au 28 février 2026.`,
     date:"2 avril 2026",
@@ -550,15 +656,15 @@ const ARTICLES = [
     id:"gregoire",
     rub:"hard",
     overline:"Analyse · Sahel",
-    titre:`La guerre au Mali; une guerre qui se répéte`,
-    chapo:`Depuis 2012, un conflit armée et en cours à la suite d'insurrections djihadistes. Ce conflit s'inscrit dans le contexte de la guerre du Sahel et des rébellions touarègues contre l'État malien. Analyse d'un conflit continental dans son contexte historique et géopolitique.`,
+    titre:`La guerre au Mali : une guerre qui se répète`,
+    chapo:`Depuis 2012, un conflit armé est en cours à la suite d'insurrections djihadistes. Il s'inscrit dans le contexte de la guerre du Sahel et des rébellions touarègues contre l'État malien. Analyse d'un conflit dans son contexte historique et géopolitique.`,
     image:"mali",
     legende:`Au nord du Mali, les Touaregs s’imposent après le départ des troupes de l’ONU. © Radio France`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`Pour recituer le conflit dans l'Histoire, cette guerre civile découle des nombreuses insurections djiahadistes. En effet des le début des années 90 les mouvements de créent en Algérie. Le mouvement se propage à travers l'Afrique très rapidement. Il est notamment présent en Mauritanie, au Burkina Faso ou encore au Bénin.`},
-      {t:"p", c:`Les Djihadistes se déplacent et s'installent dans la région du sahel et principalement au Mali après après la défaite de la Guerre Civile en Algérie (1992-2002). Les groupes extrémistes radicaux se propagent vite dans la région jusqu'à débuter une guerre contre l'armée malienne en 2012. Malgré les interventions de l'armée, Paris échoue à repousser les Djihadistes. Le président français François Hollande annonce en 2013 durant l'opération SERVAL : « Nous sommes venus stopper les terroristes, mais la paix durable dépendra surtout des Maliens eux-mêmes. » — François Hollande`},
-      {t:"p", c:`Le Mali, aggréssé par les tribus touaregs et les groupes révolutionnaires djihadistes et peu aidé par la France est la conséquence des inactivités de l'Europe sur des conflits de plus en plus grands, importants et qui s'étend sur le continent africain en entier et à causé la mort de milliers de personnes notamment civiles d'après l'ONU.`}
+      {t:"p", c:`Pour resituer le conflit dans l'Histoire, cette guerre civile découle de nombreuses insurrections djihadistes. En effet, dès le début des années 1990, les mouvements se créent en Algérie. Le phénomène se propage très rapidement à travers l'Afrique. Il est notamment présent en Mauritanie, au Burkina Faso ou encore au Bénin.`},
+      {t:"p", c:`Les djihadistes se déplacent et s'installent dans la région du Sahel, et principalement au Mali, après la fin de la guerre civile en Algérie (1992-2002). Les groupes extrémistes radicaux se propagent vite dans la région, jusqu'à déclencher une guerre contre l'armée malienne en 2012. Malgré ses interventions, Paris échoue à repousser les djihadistes. Le président français François Hollande déclare en 2013, durant l'opération Serval : « Nous sommes venus stopper les terroristes, mais la paix durable dépendra surtout des Maliens eux-mêmes. »`},
+      {t:"p", c:`Le Mali, agressé par les tribus touarègues et les groupes djihadistes et peu aidé par la France, illustre l'inaction de l'Europe face à des conflits de plus en plus importants. Ces derniers s'étendent à l'ensemble du continent africain et ont causé la mort de milliers de personnes, notamment civiles, d'après l'ONU.`}
     ],
     journaliste:{
       nom:`Monsieur Grégoire`,
@@ -574,14 +680,14 @@ const ARTICLES = [
     id:"hagors",
     rub:"hard",
     overline:"Enquête · Détroit de Taïwan",
-    titre:`Tirs balistiques chinois, les taiwanais ont ils raison de craindre la menace voisine ?`,
-    chapo:`Ces lourdes manœuvres qui surviennent après une longue période de détente ravivent les tensions entre les deux voisins de part et d'autre du détroit de Taiwan. La Chine qui a toujours prétendu vouloir posséder l'ile, semble cette fois déterminée, ce qui inquiète les autorités taiwanaises.`,
+    titre:`Tirs balistiques chinois : les Taïwanais ont-ils raison de craindre la menace voisine ?`,
+    chapo:`Ces lourdes manœuvres, qui surviennent après une longue période de détente, ravivent les tensions entre les deux voisins de part et d'autre du détroit de Taïwan. La Chine, qui a toujours affirmé vouloir récupérer l'île, semble cette fois déterminée, ce qui inquiète les autorités taïwanaises.`,
     image:"taiwan",
     legende:`Militaires chinois à l’entraînement sur les côtes. © AFP – Greg Baker`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`C'est une nouvelle fracassante. Dans la matinée du 30 décembre 2025, les habitants de la petite ville de Fang shan entendent une soudre détonation depuis la mer. Il s'agit en réalité des tirs chinois lancés au large des cotes. Le président chinois Xi Jinping déclare qu'il mène autour de Taiwan une opération d'entrainement militaire. Cependant, ces opérations n'ont rien d'anodines, c'est une stratégie chinoise qui vise a inquiéter la population taiwanaise, d'une possible invasion. Nos équipes d'investigations du Monde ont tenté d'enquêter sur ces fameuses bases militaires chinoises aux abords de l'ile mais aussi de la préparation de l'armée chinoise et de leurs ressources en armements. S'agirait il d'une mascarade de la part des chinois ? Ou ont ils réellement l'intention d'envahir leurs voisins ? Sur les cotes chinoises les militaires sont bels et bien en mission d'entrainement qui justifie la peur taiwanaise d'une invasion de leurs territoires. Malgré qu'une partie de la population (30%) se considère comme chinois légitime, la majorité souhaite conserver leur nationalité et craignent l'attaque chinoise imminente. Un habitant et ancien officier naval de Fang Shan, la ville ou nous résidons le temps de cette enquête, nous confie sa peur particuliere de ces tirs : « Ce genre de choses m'inquiète plus encore que leurs portes avions ! »`},
-      {t:"p", c:`Mais la menace chinoise reste a nuancer, pour l'instant il ne s'agit seulement d'avertissements et la chine n'a publié aucune publication sur sa volonté d'attaque, les autorités taiwanaises ont néanmoins lancés des préparations et exercices militaires`}
+      {t:"p", c:`C'est une nouvelle fracassante. Dans la matinée du 30 décembre 2025, les habitants de la petite ville de Fangshan entendent une sourde détonation venant de la mer. Il s'agit en réalité de tirs chinois lancés au large des côtes. Le président chinois Xi Jinping déclare qu'il mène autour de Taïwan une opération d'entraînement militaire. Cependant, ces opérations n'ont rien d'anodin : c'est une stratégie chinoise qui vise à inquiéter la population taïwanaise par la menace d'une possible invasion. Nos équipes d'investigation du Monde ont tenté d'enquêter sur ces fameuses bases militaires chinoises aux abords de l'île, mais aussi sur la préparation de l'armée chinoise et ses ressources en armement. S'agirait-il d'une mascarade de la part des Chinois ? Ou ont-ils réellement l'intention d'envahir leur voisin ? Sur les côtes chinoises, les militaires sont bel et bien en mission d'entraînement, ce qui justifie la peur taïwanaise d'une invasion. Bien qu'une partie de la population (30 %) se considère comme légitimement chinoise, la majorité souhaite conserver sa nationalité et craint une attaque chinoise imminente. Un habitant et ancien officier naval de Fangshan, la ville où nous résidons le temps de cette enquête, nous confie sa peur particulière de ces tirs : « Ce genre de choses m'inquiète plus encore que leurs porte-avions ! »`},
+      {t:"p", c:`Mais la menace chinoise reste à nuancer : pour l'instant, il ne s'agit que d'avertissements et la Chine n'a fait aucune déclaration sur une volonté d'attaque. Les autorités taïwanaises ont néanmoins lancé des préparatifs et des exercices militaires.`}
     ],
     journaliste:{
       nom:`Romy Hagors`,
@@ -604,13 +710,13 @@ const ARTICLES = [
     legende:`Ouagadougou (Burkina Faso) : manifestations anti-françaises devant l’ambassade de France. © Le Monde`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`Le 23 janvier 2023, le gouvernement burkinabé exige aux troupes françaises présentes sur le territoire de quitter le pays. Ces troupes étaient sur place depuis 2012 dans le cadre de la mission Barkhane pour lutter contre le terrorisme au Sahel. Cela fait suite à la politique du nouveau gouvernement burkinabé d'Ibrahim Traoré, et aux sentiment anti-français dans la région, qui s’est traduit notamment par l’attaque de l’ambassade de France à Ouagadougou en octobre 2022.`},
+      {t:"p", c:`Le 23 janvier 2023, le gouvernement burkinabé exige aux troupes françaises présentes sur le territoire de quitter le pays. Ces troupes étaient sur place depuis 2012 dans le cadre de la mission Barkhane pour lutter contre le terrorisme au Sahel. Cela fait suite à la politique du nouveau gouvernement burkinabé d'Ibrahim Traoré, et au sentiment anti-français dans la région, qui s’est traduit notamment par l’attaque de l’ambassade de France à Ouagadougou en octobre 2022.`},
       {t:"p", c:`Avant la fin du XIXe siècle, le Burkina Faso était composé de différents royaumes. En 1896, il devient une colonie française. En 1898, l’essentiel de l’actuel Burkina Faso est conquis par les troupes françaises. La colonie est rattachée à l’Afrique-occidentale-française (AOF) et en 1919, elle prend le nom de Haute-Volta. La population indigène (nom utilisé pour désigner les personnes non-françaises durant la colonisation) n'est pas soumise aux mêmes lois que les blancs. Par exemple, les enfants indigènes sont interdits d’utiliser une bicyclette.`},
       {t:"p", c:`En 1960, des élections ont lieu pour élire un Parlement, la République de Haute-Volta obtient son indépendance. Mais la France garde un lien étroit avec ses anciennes colonies: la monnaie est (encore aujourd’hui) le franc CFA, le pays est francophone et membre de l’organisation de la francophonie depuis 1970. Le système éducatif est très ressemblant au système français, éduque les enfants comme en France. La France exerce aussi une influence politique et militaire avec des accords de défense et des ingérences dans la politique du pays, mais aussi avec l’aide au développement. La politique française est ainsi qualifiée de “Françafrique”.`},
       {t:"p", c:`Peu à peu, des voix se font entendre pour contester cette relation “postcoloniale” et obtenir plus de souveraineté. C’est notamment dans ce contexte que Thomas Sankara devient chef du gouvernement en 1980 et critique ouvertement la relation de la France avec le pays. Il renomme notamment le pays “Burkina Faso” (le “pays des hommes intègres”) afin d’effacer l’héritage colonial.`},
       {t:"p", c:`Après le coup d'État contre Thomas Sankara, le pays renforce sa relation avec la France, car Blaise Compaoré est très proche du gouvernement français. Il a entretenu des liens économiques étroits avec la France par le biais des entreprises françaises présentes sur le territoire burkinabé. En échange, il avait le soutien de la France dans son régime qui durera près de 27 ans.`},
       {t:"p", c:`Après la chute de Blaise Compaoré suite à des manifestations en 2014, le sentiment anti-français se propage, car les Burkinabés accusent la France d’avoir favorisé son exil en Côte d’Ivoire. Mais avec l’instabilité politique et l’insécurité croissante, la France intervient militairement dans le pays dans le cadre de l’opération Barkhane pour le sécuriser. Elle est rapidement critiquée car elle serait plus présente pour protéger ses intérêts économiques que pour sécuriser le pays.`},
-      {t:"p", c:`Ainsi, deux coups d’État ont lieu en 2022 dont le dernier porte Ibrahim Traoré au pouvoir dans un contexte de larges manifestations anti-françaises. Le nouveau chef du gouvernement ordonne ainsi à l'armée française de quitter le pays, au profit de soldats russes. Aujourd’hui, les relations économiques et diplomatiques entre la France et le Burkina Faso ont fortement diminuées et la Russie s'attelle à progressivement prendre la place de la France au Burkina Faso.`},
+      {t:"p", c:`Ainsi, deux coups d’État ont lieu en 2022 dont le dernier porte Ibrahim Traoré au pouvoir dans un contexte de larges manifestations anti-françaises. Le nouveau chef du gouvernement ordonne ainsi à l'armée française de quitter le pays, au profit de soldats russes. Aujourd’hui, les relations économiques et diplomatiques entre la France et le Burkina Faso ont fortement diminué et la Russie s'attelle à progressivement prendre la place de la France au Burkina Faso.`},
       {t:"p", c:`Aujourd'hui, le soft power français se marque par la présence de médias français comme France 24 malgré leurs baisse d'influence dans le pays, la langue française est la langue officielle du pays, les multinationales française sont encore en place (Totalénergies par exemple) et extraient les minerais. Ibrahim Traoré nationalise certains secteurs ou remplace les entreprises française par des russes pour lutter contre ce qu'il décrit comme du "néo-colonialisme".`},
       {t:"p", c:`Ainsi, les relations entre la France et le Burkina Faso sont en constante évolution depuis la colonisation.`}
     ],
@@ -629,14 +735,14 @@ const ARTICLES = [
     rub:"soft",
     overline:"Diplomatie sportive · Maroc",
     titre:`CAN 2025 : le soft power marocain en action`,
-    chapo:`Janvier 2026 : Le Maroc accueille la coupe de foot la plus connue d'Afrique : La CAN, Coupe d'Afrique des Nations édition 2025-26. Cette de`,
+    chapo:`Janvier 2026 : le Maroc accueille la compétition de football la plus connue d'Afrique, la CAN (Coupe d'Afrique des Nations), édition 2025-2026.`,
     image:"can",
     legende:`Logo de la CAN 2025.`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`En 2026 tout le monde parle encore la CAN , Coupe d ' Afrique des Nations . Malgré une défaite du Maroc contre le Senegal en finale le pays à remporté une autre victoire bien plus importante : celle de son image et de son influence a l international . Grace a cette compétition , le Maroc a montré au monde entier qu'il sait organiser de grands événements , accueillir des milliers de supporters et faire rayonner sa culture , symbole de son soft power . Cette compétition à permis au Maroc de briller et d étendre son influence . Le royaume a prouvé qu'il avait des infrastructures sportives modernes , une bonne organisation et un bon sens de l'hospitalité . Même sans trophée, le pays am marque des points dans le cœur des africains et des observateurs internationaux . En effet ces images ont fait le tour du monde, le Maroc est désormais vu comme un pays dynamique , ouvert et capable de rassembler .`},
-      {t:"p", c:`Le Maroc ne s arrête pas a la CAN , en effet il utilise cet outil de diplomatie et prépare déjà la coupe du monde 2030. Pour les experts c’est une stratégie bien réfléchie : utiliser le sport pour renforcer les liens avec d autres pays , attirer les touristes et améliorer son image En 2026 le Maroc se place parmi me s50 pays les plus influents du monde en terme de soft power et troisième en Afrique derrière l Égypte et l Afrique du sud . U ne performance qui montre queen le pays sait jouer sur plusieurs tableaux : sport , culture , économie et diplomatie .`},
-      {t:"p", c:`En somme , en organisant la CAN le Maroc s’est positionné comme un acteur incontournable en Afrique, mais aussi au centre des relations entre l’Europe, les pays arabes, et l’Afrique.`}
+      {t:"p", c:`En 2026, tout le monde parle encore de la CAN, la Coupe d'Afrique des Nations. Malgré une défaite du Maroc contre le Sénégal en finale, le pays a remporté une autre victoire bien plus importante : celle de son image et de son influence à l'international. Grâce à cette compétition, le Maroc a montré au monde entier qu'il sait organiser de grands événements, accueillir des milliers de supporters et faire rayonner sa culture, symbole de son soft power. Cette compétition a permis au Maroc de briller et d'étendre son influence. Le royaume a prouvé qu'il disposait d'infrastructures sportives modernes, d'une bonne organisation et d'un grand sens de l'hospitalité. Même sans trophée, le pays marque des points dans le cœur des Africains et des observateurs internationaux. Ces images ont fait le tour du monde : le Maroc est désormais vu comme un pays dynamique, ouvert et capable de rassembler.`},
+      {t:"p", c:`Le Maroc ne s'arrête pas à la CAN : il utilise cet outil de diplomatie et prépare déjà la Coupe du monde 2030. Pour les experts, c'est une stratégie bien réfléchie : utiliser le sport pour renforcer les liens avec d'autres pays, attirer les touristes et améliorer son image. En 2026, le Maroc se place parmi les 50 pays les plus influents du monde en termes de soft power, et troisième en Afrique derrière l'Égypte et l'Afrique du Sud. Une performance qui montre que le pays sait jouer sur plusieurs tableaux : sport, culture, économie et diplomatie.`},
+      {t:"p", c:`En somme, en organisant la CAN, le Maroc s'est positionné comme un acteur incontournable en Afrique, mais aussi au centre des relations entre l'Europe, les pays arabes et l'Afrique.`}
     ],
     journaliste:{
       nom:`Elisabeth McLarenn`,
@@ -652,15 +758,15 @@ const ARTICLES = [
     id:"epsteine",
     rub:"soft",
     overline:"Analyse · Reconstruction de Gaza",
-    titre:`Le pari Israélien: faire de Gaza un modèle de prospérité`,
-    chapo:`Le président de l'Amérique a annoncé une cogestion, avec Israël et les États arabes, de Gaza en vue de la création d'une luxueuse "French riviera" à Gaza reprenant le plan israélien "Gaza 2035" et s'intégrant dans la stratégie de gestion de Gaza mise en place par Israël après les attentats du 7 octobre 2023 orchestrés par les terroristes de l'Hamas. Le nouveau Dubaï du Moyen-Orient est lancé !`,
+    titre:`Le pari israélien : faire de Gaza un modèle de prospérité`,
+    chapo:`Le président des États-Unis a annoncé une cogestion de Gaza, avec Israël et les États arabes, en vue de la création d'une luxueuse « French Riviera ». Reprenant le plan israélien « Gaza 2035 », le projet s'intègre dans la stratégie de gestion de Gaza mise en place par Israël après les attentats du 7 octobre 2023 orchestrés par le Hamas. Le nouveau Dubaï du Moyen-Orient est lancé !`,
     image:"gaza",
     legende:`Plan de reconstruction du projet « Gaza 2035 ». © Gouvernement israélien`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`Le commandant américain Jasper Jeffers, est mandaté par les Nations-Unies pour qu'enfin la paix et la stabilité reviennent à Gaza. Sa principale mission est de rétablir la paix en démilitarisant le Hamas : "Les Palestiniens méritent un avenir meilleur" déclara-t-il au Nations-Unies. Cette mission de démilitarisation est essentiel pour pouvoir sécuriser l'acheminement de l'aide humanitaire et du matériel de reconstruction dans la Bande de Gaza. Pour l'aider dans cette mission les Etats-Unis ont créer le "Conseil de la paix" chargé de rétablir la sécurité et la paix à Gaza. Le président de ce conseil Nickolay Mladenov a également été nommé Haut Représentant pour Gaza, à ce titre il est chargé d'entretenir des relations entre le Conseil de la paix et le NCHV.`},
-      {t:"p", c:`Le plan comprend la construction de nouvelles infrastructures. Avec notamment la construction au sud de Gaza d'un aéroport, dans la mer la construction de plateforme offshore et sur le littoral le réaménagement des plages en plages paradisiaques. En complément de l'aéroport un nouveau port sera aménagé et au sud le plan prévoit la construction d'une zone de libre échange. Pour alimenter la Bande en énergie, des champs de panneaux solaires seront implanté tout au long de celle-ci. Pour assurer le transport des Gazaouis, de nombreuses lignes de chemin de fer seront construite. Ce plan est une aubaine pour les Gazaouis car en plus du réaménagement de leur territoire, il créera de nouveaux emplois et attirera des investisseurs comme des touristes.`},
-      {t:"p", c:`Les Etats-Unis restent pleinement engagés à soutenir ce cadre de transition, en travaillant en étroite collaboration avec Israël, les principales nations arabes et la communauté internationale pour atteindre les objectifs du Plan global.`}
+      {t:"p", c:`Le commandant américain Jasper Jeffers est mandaté par les Nations unies pour qu'enfin la paix et la stabilité reviennent à Gaza. Sa principale mission est de rétablir la paix en démilitarisant le Hamas : « Les Palestiniens méritent un avenir meilleur », déclare-t-il aux Nations unies. Cette mission de démilitarisation est essentielle pour sécuriser l'acheminement de l'aide humanitaire et du matériel de reconstruction dans la bande de Gaza. Pour l'aider, les États-Unis ont créé le « Conseil de la paix », chargé de rétablir la sécurité à Gaza. Le président de ce conseil, Nickolay Mladenov, a également été nommé Haut Représentant pour Gaza ; à ce titre, il est chargé d'entretenir les relations entre le Conseil de la paix et le NCHV.`},
+      {t:"p", c:`Le plan comprend la construction de nouvelles infrastructures : notamment un aéroport au sud de Gaza, des plateformes offshore en mer et, sur le littoral, le réaménagement des plages en plages paradisiaques. En complément de l'aéroport, un nouveau port sera aménagé, et au sud le plan prévoit une zone de libre-échange. Pour alimenter la bande en énergie, des champs de panneaux solaires seront implantés tout au long de celle-ci. Pour assurer le transport des Gazaouis, de nombreuses lignes de chemin de fer seront construites. Ce plan est une aubaine pour les Gazaouis car, en plus du réaménagement de leur territoire, il créera de nouveaux emplois et attirera des investisseurs comme des touristes.`},
+      {t:"p", c:`Les États-Unis restent pleinement engagés à soutenir ce cadre de transition, en travaillant en étroite collaboration avec Israël, les principales nations arabes et la communauté internationale, pour atteindre les objectifs du plan global.`}
     ],
     journaliste:{
       nom:`Antoine Epsteine`,
@@ -677,12 +783,12 @@ const ARTICLES = [
     rub:"smart",
     overline:"Diplomatie · Sénégal",
     titre:`Accord de paix entre le Sénégal et la Casamance`,
-    chapo:`Depuis plus de 40 ans, le Sénégal fait face a un conflit interne avec la Casamance. Durant 2025, un accord de paix est signé entre les nouvelles autorités du Sénégal et la rébellion indépendantiste de Casamance.`,
+    chapo:`Depuis plus de 40 ans, le Sénégal fait face à un conflit interne avec la Casamance. En 2025, un accord de paix est signé entre les nouvelles autorités du Sénégal et la rébellion indépendantiste de Casamance.`,
     image:"casamance",
     legende:`Signature de l’accord de paix au Sénégal, février 2025.`,
     date:"2 avril 2026",
     corps:[
-      {t:"p", c:`Le Sénégal est un pays de la côte ouest africaine, abritant la Casamance, une région Sénégalaise située au sud-ouest du pays. Depuis 1982, un conflit interne règne en raison d'une volonté d'émancipation du côté de la Casamance et d'un refus catégorique du pays. Au cours des années qui vont suivre des tensions s'accentuent jusqu'à mars 2022, où une grande opération offensive est lancée par les forces sénégalaises pour tenter de mettre fin à ce débat. Par la suite, les combats prennent de l’ampleur et l'armée Sénégalaise obtient finalement une victoire rapide, malgré un taux de perte important du côté de son armée. Aujourd'hui les rebelles sont activement recherchés après avoir pris la fuite suite à la victoire de leur concurrent. C'est alors le 23 février 2025 que Ousmane Sonko, le premier ministre du Sénégal signe un protocole d'accord de paix visant à une paix définitive avec les Casamançais.`}
+      {t:"p", c:`Le Sénégal est un pays de la côte ouest-africaine. Il abrite la Casamance, une région sénégalaise située au sud-ouest du pays. Depuis 1982, un conflit interne y règne, en raison d'une volonté d'émancipation de la Casamance et d'un refus catégorique de l'État. Au cours des années suivantes, les tensions s'accentuent, jusqu'à mars 2022, où une grande opération offensive est lancée par les forces sénégalaises pour tenter d'y mettre fin. Par la suite, les combats prennent de l'ampleur et l'armée sénégalaise obtient finalement une victoire rapide, malgré des pertes importantes dans ses rangs. Aujourd'hui, les rebelles sont activement recherchés après avoir pris la fuite. C'est alors, le 23 février 2025, qu'Ousmane Sonko, le Premier ministre du Sénégal, signe un protocole d'accord de paix visant une paix définitive avec les Casamançais.`}
     ],
     journaliste:{
       nom:`Binta Vicroft`,
@@ -785,7 +891,7 @@ const ARTICLES = [
     date:"2 avril 2026",
     corps:[
       {t:"p", c:`Le France Libre fait partie du programme PANG (porte-avions nouvelle génération), dont la construction vient d'être lancée. Il doit entrer en service en 2038 afin de remplacer le Charles de Gaulle, en fonction depuis 2001.`},
-      {t:"p", c:`« Nous devons être forts pour être craints » : il s'agit de préparer l'avenir et les combats futurs. Comparé au Charles de Gaulle, il fera 300 mètres de plus et le double de son poids. Il sera plus efficace.`}
+      {t:"p", c:`« Nous devons être forts pour être craints » : il s'agit de préparer l'avenir et les combats futurs. Comparé au Charles de Gaulle, il sera plus grand et deux fois plus lourd, donc plus efficace.`}
     ],
     journaliste:{
       nom:`Luvia Lopez`,
@@ -1016,8 +1122,11 @@ function show(rub){
   if(rub === "une"){ renderUne(); $("#view-une").classList.add("active"); }
   else { renderRubrique(rub); $("#view-"+rub).classList.add("active"); }
 
-  document.querySelectorAll("nav.rubnav button").forEach(b =>
-    b.classList.toggle("active", b.dataset.rub === rub));
+  document.querySelectorAll("nav.rubnav button").forEach(b => {
+    const on = b.dataset.rub === rub;
+    b.classList.toggle("active", on);
+    if(on) b.scrollIntoView({inline:"center", block:"nearest", behavior:"smooth"});
+  });
   if(rub !== "une") lastRub = rub;
   window.scrollTo({top:0, behavior:"smooth"});
 }
